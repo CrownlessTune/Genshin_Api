@@ -2,8 +2,10 @@ html, body {
   height: 100%; 
   margin: 0; 
   padding: 0; 
-  font-family: 'Black Archive', sans-serif; 
+  font-family: 'Black Archive', 'Comfortaa'; 
 }
+
+
 
 #root {
   display: flex;
