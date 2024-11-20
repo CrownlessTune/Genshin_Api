@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import LayoutPublic from '../layout/PublicLayout';
 
 
-const Login = () => {
+const Enemies = () => {
 
   return(
     <LayoutPublic>
-      <h1>Login</h1>
+      <h1>Enemies</h1>
 
     </LayoutPublic>
 
@@ -17,4 +17,4 @@ const Login = () => {
 }
 
 
-export default Login;
+export default Enemies;

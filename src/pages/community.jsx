@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import LayoutPublic from '../layout/PublicLayout';
 
 
-const Login = () => {
+const Community = () => {
 
   return(
     <LayoutPublic>
-      <h1>Login</h1>
+      <h1>Community</h1>
 
     </LayoutPublic>
 
@@ -17,4 +17,4 @@ const Login = () => {
 }
 
 
-export default Login;
+export default Community;
