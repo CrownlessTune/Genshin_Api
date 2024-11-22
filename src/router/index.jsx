@@ -8,6 +8,7 @@ import Characters from "../pages/characters";
 import Community from "../pages/community";
 import Regions from "../pages/regions";
 import Enemies from "../pages/enemies";
+import { auth } from "../config/firebase";
 
 
 export const router = createBrowserRouter([
