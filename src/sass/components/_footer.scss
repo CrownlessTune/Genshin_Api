@@ -1,0 +1,24 @@
+footer {
+    margin-top: auto;
+    padding: 20px;
+    background-color: #f1f1f1; // Cambié '#h1h1h1' porque no es un color válido.
+    font-size: 18px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: 2px solid #ccc;
+    text-align: center;
+  
+    a {
+      font-size: 20px;
+      text-decoration: none;
+      color: inherit;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  

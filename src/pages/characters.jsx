@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import CharacterList from './CharacterList';
-import CharacterDetail from './CharacterDetail';
+import CharacterList from '../components/characterlist';
+import CharacterDetail from '../components/CharacterDetail';
 
 const Characters = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
