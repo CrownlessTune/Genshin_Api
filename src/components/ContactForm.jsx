@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Swal from 'sweetalert2';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const ContactForm = ({ submitContact }) => {
-  const initialState = {
+  const initialValues = {
     name: '',
     email: '',
     reason: '',
@@ -10,69 +12,26 @@ const ContactForm = ({ submitContact }) => {
     rating: 3,
   };
 
-  const [formData, setFormData] = useState(initialState);
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required.'),
+    email: Yup.string().email('Invalid email address.').required('Email is required.'),
+    reason: Yup.string().required('Please select a reason to contact.'),
+    message: Yup.string().required('The opinion field is required.'),
+    rating: Yup.number()
+      .min(1, 'Rating must be at least 1.')
+      .max(5, 'Rating cannot exceed 5.')
+      .required('Rating is required.'),
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { name, email, reason, message, rating } = formData;
-
-    if (!name.trim()) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Name is required.',
-        icon: 'error',
-      });
-      e.target[0].focus();
-      return;
-    }
-
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-      Swal.fire({
-        title: 'Error',
-        text: 'A valid email is required.',
-        icon: 'error',
-      });
-      e.target[1].focus();
-      return;
-    }
-
-    if (!reason.trim()) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Please select a reason to contact.',
-        icon: 'error',
-      });
-      e.target[2].focus();
-      return;
-    }
-
-    if (!message.trim()) {
-      Swal.fire({
-        title: 'Error',
-        text: 'The opinion field is required.',
-        icon: 'error',
-      });
-      e.target[3].focus();
-      return;
-    }
-
+  const handleSubmit = (values, { resetForm }) => {
     Swal.fire({
       title: 'Success',
       text: 'Form submitted successfully.',
       icon: 'success',
     });
 
-    submitContact({ name, email, reason, message, rating });
-    setFormData(initialState);
-  };
-
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'number' ? parseInt(value) : value,
-    });
+    submitContact(values);
+    resetForm();
   };
 
   const formStyle = {
@@ -94,59 +53,79 @@ const ContactForm = ({ submitContact }) => {
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <input
-          name="name"
-          type="text"
-          style={inputStyle}
-          placeholder="Enter your name"
-          onChange={handleChange}
-          value={formData.name}
-        />
-        <input
-          name="email"
-          type="email"
-          style={inputStyle}
-          placeholder="Enter your email"
-          onChange={handleChange}
-          value={formData.email}
-        />
-        <select
-          name="reason"
-          style={inputStyle}
-          onChange={handleChange}
-          value={formData.reason}
-        >
-          <option value="">Select a reason</option>
-          <option value="support">Technical Support</option>
-          <option value="feedback">Feedback</option>
-          <option value="other">Other</option>
-        </select>
-        {formData.reason && (
-          <textarea
-            name="message"
-            style={inputStyle}
-            placeholder="Write your opinion"
-            onChange={handleChange}
-            value={formData.message}
-          />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form style={formStyle}>
+            <div>
+              <Field
+                name="name"
+                type="text"
+                style={inputStyle}
+                placeholder="Enter your name"
+              />
+              <ErrorMessage name="name" component="div" style={{ color: 'red' }} />
+            </div>
+
+            <div>
+              <Field
+                name="email"
+                type="email"
+                style={inputStyle}
+                placeholder="Enter your email"
+              />
+              <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
+            </div>
+
+            <div>
+              <Field
+                name="reason"
+                as="select"
+                style={inputStyle}
+              >
+                <option value="">Select a reason</option>
+                <option value="support">Technical Support</option>
+                <option value="feedback">Feedback</option>
+                <option value="other">Other</option>
+              </Field>
+              <ErrorMessage name="reason" component="div" style={{ color: 'red' }} />
+            </div>
+
+            <div>
+              <Field
+                name="message"
+                as="textarea"
+                style={inputStyle}
+                placeholder="Write your opinion"
+              />
+              <ErrorMessage name="message" component="div" style={{ color: 'red' }} />
+            </div>
+
+            <div>
+              <label>Rate the Page (1-5):</label>
+              <Field
+                name="rating"
+                type="number"
+                min="1"
+                max="5"
+                style={inputStyle}
+              />
+              <ErrorMessage name="rating" component="div" style={{ color: 'red' }} />
+            </div>
+
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              Submit
+            </button>
+          </Form>
         )}
-        <div>
-          <label>Rate the Page (1-5):</label>
-          <input
-            name="rating"
-            type="number"
-            min="1"
-            max="5"
-            style={inputStyle}
-            onChange={handleChange}
-            value={formData.rating}
-          />
-        </div>
-        <button className="btn btn-primary" type="submit">
-          Submit
-        </button>
-      </form>
+      </Formik>
     </div>
   );
 };

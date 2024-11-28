@@ -1,6 +1,6 @@
 import React from 'react';
 import LayoutPublic from '../layout/PublicLayout';
-
+import ApiPagination from '../components/ApiPagination';
 function Home() {
   const mainStyle = {
     padding: '40px', 
@@ -17,6 +17,8 @@ function Home() {
         <br />
         Furthermore, you can create your own profile, design it your way, and create your own posts and comment on others' ones.
       </p>
+      <ApiPagination></ApiPagination>
+
     </LayoutPublic>
   );
 }
