@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../sass/components/_CharacterSearch.scss'; 
 
 const CharacterSearch = () => {
   const [characters, setCharacters] = useState([]);
@@ -7,16 +8,18 @@ const CharacterSearch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    vision: '', // Actualizado a "vision"
+    vision: '',
     weapon: '',
     rarity: '',
   });
+
+  const [imageUrls, setImageUrls] = useState({});  // Estado para almacenar URLs de imágenes
 
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
         const response = await axios.get('https://genshin.jmp.blue/characters/all?lang=en');
-        setCharacters(response.data); // Supone que `response.data` contiene un array de personajes
+        setCharacters(response.data);
         setFilteredCharacters(response.data);
       } catch (err) {
         setError(err.message);
@@ -27,14 +30,6 @@ const CharacterSearch = () => {
 
     fetchCharacters();
   }, []);
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   useEffect(() => {
     const filterCharacters = () => {
@@ -52,13 +47,51 @@ const CharacterSearch = () => {
     filterCharacters();
   }, [filters, characters]);
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Función para intentar cargar la imagen por id o por nombre
+  const getCharacterImage = (character) => {
+    const idImageUrl = `https://genshin.jmp.blue/characters/${character.id}/card`;
+    const nameImageUrl = `https://genshin.jmp.blue/characters/${character.name.toLowerCase().replace(/\s+/g, '-')}/card`;
+
+    // Primero intentamos cargar la imagen por id
+    const img = new Image();
+    img.onload = () => {
+      setImageUrls(prevState => ({
+        ...prevState,
+        [character.id]: idImageUrl,  // Si carga, asignamos la imagen por ID
+      }));
+    };
+    img.onerror = () => {
+      // Si no carga la imagen por id, asignamos la imagen por nombre
+      setImageUrls(prevState => ({
+        ...prevState,
+        [character.id]: nameImageUrl,
+      }));
+    };
+    img.src = idImageUrl;
+  };
+
+  // Ejecutar la carga de imágenes para cada personaje cuando se renderiza
+  useEffect(() => {
+    characters.forEach((character) => {
+      getCharacterImage(character);
+    });
+  }, [characters]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="character-search-container">
       <h1>Character Search</h1>
-      <div>
+      <div className="filters">
         <label>
           Vision:
           <select name="vision" onChange={handleFilterChange} value={filters.vision}>
@@ -92,21 +125,21 @@ const CharacterSearch = () => {
           </select>
         </label>
       </div>
-      <ul>
+      <div className="characters-grid">
         {filteredCharacters.map((character) => (
-          <li key={character.id}>
+          <div className="character-card" key={character.id}>
             <h3>{character.name}</h3>
             <img
-              src={`https://genshin.jmp.blue/characters/${character.id}/card`}
+              src={imageUrls[character.id]}  // Usamos el estado para la imagen
               alt={character.name}
-              width={100}
+              className="character-image"
             />
             <p>Vision: {character.vision}</p>
             <p>Weapon: {character.weapon}</p>
             <p>Rarity: {character.rarity} Stars</p>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

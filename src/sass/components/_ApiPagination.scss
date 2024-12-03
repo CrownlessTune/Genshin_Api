@@ -1,0 +1,49 @@
+.api-pagination {
+  text-align: center;
+
+  .item-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .card {
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      width: 200px;
+      text-align: center;
+
+      .card-image {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+      }
+
+      .card-title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .pagination {
+    margin: 20px 0;
+
+    button {
+      margin: 0 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
