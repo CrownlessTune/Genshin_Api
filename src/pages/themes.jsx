@@ -1,12 +1,14 @@
 import React from 'react';
 import LayoutPublic from '../layout/PublicLayout';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 
 
 const Themes = () => {
 
   return(
     <LayoutPublic>
-      <h1>Themes</h1>
+      <ThemeSwitcher></ThemeSwitcher>
+      
 
     </LayoutPublic>
 

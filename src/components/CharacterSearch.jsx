@@ -13,7 +13,7 @@ const CharacterSearch = () => {
     rarity: '',
   });
 
-  const [imageUrls, setImageUrls] = useState({});  // Estado para almacenar URLs de imágenes
+  const [imageUrls, setImageUrls] = useState({});
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -55,22 +55,30 @@ const CharacterSearch = () => {
     }));
   };
 
-  // Función para intentar cargar la imagen por id o por nombre
   const getCharacterImage = (character) => {
+    const cachedImageUrl = localStorage.getItem(`character_${character.id}`);
+    if (cachedImageUrl) {
+      setImageUrls((prevState) => ({
+        ...prevState,
+        [character.id]: cachedImageUrl,
+      }));
+      return;
+    }
+
     const idImageUrl = `https://genshin.jmp.blue/characters/${character.id}/card`;
     const nameImageUrl = `https://genshin.jmp.blue/characters/${character.name.toLowerCase().replace(/\s+/g, '-')}/card`;
 
-    // Primero intentamos cargar la imagen por id
     const img = new Image();
     img.onload = () => {
-      setImageUrls(prevState => ({
+      localStorage.setItem(`character_${character.id}`, idImageUrl);
+      setImageUrls((prevState) => ({
         ...prevState,
-        [character.id]: idImageUrl,  // Si carga, asignamos la imagen por ID
+        [character.id]: idImageUrl,
       }));
     };
     img.onerror = () => {
-      // Si no carga la imagen por id, asignamos la imagen por nombre
-      setImageUrls(prevState => ({
+      localStorage.setItem(`character_${character.id}`, nameImageUrl);
+      setImageUrls((prevState) => ({
         ...prevState,
         [character.id]: nameImageUrl,
       }));
@@ -78,20 +86,21 @@ const CharacterSearch = () => {
     img.src = idImageUrl;
   };
 
-  // Ejecutar la carga de imágenes para cada personaje cuando se renderiza
   useEffect(() => {
     characters.forEach((character) => {
       getCharacterImage(character);
     });
   }, [characters]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="character-search-container">
-      <h1>Character Search</h1>
-      <div className="filters">
+    <main className="character-search-container">
+      <header>
+        <h1>Character Search</h1>
+      </header>
+      <section className="filters" aria-label="Filter options">
         <label>
           Vision:
           <select name="vision" onChange={handleFilterChange} value={filters.vision}>
@@ -124,23 +133,27 @@ const CharacterSearch = () => {
             <option value="5">5 Stars</option>
           </select>
         </label>
-      </div>
-      <div className="characters-grid">
-        {filteredCharacters.map((character) => (
-          <div className="character-card" key={character.id}>
-            <h3>{character.name}</h3>
-            <img
-              src={imageUrls[character.id]}  // Usamos el estado para la imagen
-              alt={character.name}
-              className="character-image"
-            />
-            <p>Vision: {character.vision}</p>
-            <p>Weapon: {character.weapon}</p>
-            <p>Rarity: {character.rarity} Stars</p>
-          </div>
-        ))}
-      </div>
-    </div>
+      </section>
+      <section className="characters-grid" aria-label="Character results">
+        <ul>
+          {filteredCharacters.map((character) => (
+            <li className="character-card" key={character.id}>
+              <article>
+                <h2>{character.name}</h2>
+                <img
+                  src={imageUrls[character.id]}
+                  alt={`Image of ${character.name}`}
+                  className="character-image"
+                />
+                <p>Vision: {character.vision}</p>
+                <p>Weapon: {character.weapon}</p>
+                <p>Rarity: {character.rarity} Stars</p>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
   );
 };
 
