@@ -1,23 +1,23 @@
 footer {
-    margin-top: auto;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    border-top: 2px solid #ccc;
-    text-align: center;
+  margin-top: 10px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid #ccc;
+  text-align: center;
+  box-sizing: border-box; /* Evita que el padding cause desbordamiento */
   
-    a {
-      font-size: 20px;
-      text-decoration: none;
-      color: inherit;
-  
-      &:hover {
-        text-decoration: underline;
-      }
+  a {
+    font-size: 20px;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
-  
+}

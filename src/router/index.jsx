@@ -3,7 +3,6 @@ import Home from "../pages/Home";
 import Contact from "../pages/contact";
 import Error404 from "../pages/error404";
 import Login from "../pages/login";
-import Themes from "../pages/themes"; 
 import Characters from "../pages/characters";
 import Community from "../pages/community";
 import Regions from "../pages/regions";
@@ -23,10 +22,6 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/themes",
-    element: <Themes />, 
   },
   {
     path: "/characters",

@@ -7,38 +7,37 @@
     justify-content: center;
 
     .card {
-      min-height: 26vh;
-      max-height: 26vh;
-      margin: 10px;
+      min-height: 25vh; /* Reducir un poco la altura */
+      max-height: 25vh; /* Reducir un poco la altura */
+      margin: 8px; /* Reducir los márgenes */
       border: 1px solid #ccc;
       border-radius: 8px;
-      padding: 10px;
-      width: 200px;
+      padding: 8px; /* Reducir el padding */
+      width: 180px; /* Reducir el ancho */
       text-align: center;
       background-color: #f9f9f9;
 
       .card-image {
         object-fit: cover;
-        min-height: 19vh;
-        max-height: 19vh;
-        max-width: 19vh;
-        margin-top: 10px;
+        min-height: 18vh; /* Reducir la altura de la imagen */
+        max-height: 18vh; /* Reducir la altura de la imagen */
+        max-width: 20vh; /* Reducir el ancho de la imagen */
       }
 
       .card-title {
-        font-size: 16px;
+        font-size: 14px; /* Reducir el tamaño de la fuente */
         font-weight: bold;
       }
     }
   }
 
   .pagination {
-    margin: 20px 0;
+    margin: 16px 0; /* Reducir el margen de la paginación */
 
     button {
-      margin: 0 10px;
-      padding: 8px 16px;
-      font-size: 14px;
+      margin: 0 8px; /* Reducir el margen entre los botones */
+      padding: 6px 12px; /* Reducir el tamaño del padding */
+      font-size: 12px; /* Reducir el tamaño de la fuente */
       border: none;
       border-radius: 4px;
       background-color: #007bff;

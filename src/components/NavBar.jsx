@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../sass/components/_NavBar.scss';
-
+import '../sass/themes/theme.scss';
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); // Estado para controlar el desplegable del tema
+  const [currentTheme, setCurrentTheme] = useState('Celestia');
+  const themes = [
+    'Celestia', 'Hydro', 'Dendro', 'Pyro', 'Cryo', 'Anemo', 'Geo', 'Abyss'
+  ];
+
+  // Función para cambiar el tema aplicando la clase correspondiente al body
+  const handleThemeChange = (themeName) => {
+    setCurrentTheme(themeName);
+    document.body.classList.remove(...themes); // Remueve todas las clases de tema
+    document.body.classList.add(themeName); // Añade la clase del tema seleccionado
+    localStorage.setItem('theme', themeName); // Guarda el tema seleccionado en el localStorage
+  };
+
+  // Comprobar si hay un tema guardado en el localStorage al cargar el componente
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    const initialTheme = storedTheme || 'Celestia'; // Si no hay tema guardado, usa Celestia por defecto
+    setCurrentTheme(initialTheme);
+    document.body.classList.add(initialTheme); // Aplica la clase del tema guardado o Celestia
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const toggleThemeMenu = () => {
+    setIsThemeMenuOpen((prev) => !prev); // Abre/cierra el menú del tema
   };
 
   return (
@@ -51,10 +76,24 @@ const NavBar = () => {
         </div>
       )}
 
+      {/* Botón de cambio de tema */}
       <div className="navbar-theme">
-        <Link to="/themes">
+        <button onClick={toggleThemeMenu} className="theme-button">
           <span role="img" aria-label="theme">🌙</span>
-        </Link>
+        </button>
+        {isThemeMenuOpen && (
+          <div className="theme-dropdown">
+            {themes.map((themeName) => (
+              <button
+                key={themeName}
+                className={`theme-option ${currentTheme === themeName ? 'active' : ''}`}
+                onClick={() => handleThemeChange(themeName)}
+              >
+                {themeName}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );

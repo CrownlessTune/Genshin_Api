@@ -8,7 +8,7 @@ const EnemiesSearch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
-    type: '', // Normal, Elite, Boss
+    type: '', // "Elite Enemies", "Common Enemies"
     region: '', // Region-specific enemies
   });
 
@@ -64,11 +64,12 @@ const EnemiesSearch = () => {
     const filterEnemies = () => {
       const { type, region } = filters;
       const filtered = enemies.filter((enemy) => {
-        return (
-          (!type || enemy.type?.toLowerCase() === type.toLowerCase()) &&
-          (!region || enemy.region?.toLowerCase() === region.toLowerCase())
-        );
+        const enemyTypeMatch = !type || (enemy.type?.toLowerCase() === type.toLowerCase());
+        const enemyRegionMatch = !region || (enemy.region?.toLowerCase() === region.toLowerCase());
+        
+        return enemyTypeMatch && enemyRegionMatch;
       });
+
       console.log('Filtered enemies:', filtered);
       setFilteredEnemies(filtered);
     };
@@ -94,9 +95,8 @@ const EnemiesSearch = () => {
           Type:
           <select name="type" onChange={handleFilterChange} value={filters.type}>
             <option value="">All</option>
-            <option value="Normal">Normal</option>
-            <option value="Elite">Elite</option>
-            <option value="Boss">Boss</option>
+            <option value="Elite Enemies">Elite Enemies</option>
+            <option value="Common Enemies">Common Enemies</option> {/* Solo las opciones restantes */}
           </select>
         </label>
         <label>
