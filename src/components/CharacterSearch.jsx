@@ -112,7 +112,7 @@ const CharacterSearch = () => {
   return (
     <main className="character-search-container">
       <header>
-        <h1>Character Search</h1>
+        <h1>Characters</h1>
       </header>
       <section className="filters" aria-label="Filter options">
         <label>

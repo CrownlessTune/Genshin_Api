@@ -1,55 +1,70 @@
-.navbar {
+.navbar { 
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 8px;
   border-bottom: 1px solid #ccc;
   align-items: center;
-  position: relative; /* Aseguramos que el dropdown esté relativo a la navbar */
+  position: relative;
+  font-size: 18px;
 
-  &-home {
-    margin-right: 20px;
+  &-home,
+  &-menu,
+  &-search,
+  &-auth,
+  &-theme {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+  }
 
-    a {
-      font-size: 24px;
-      font-weight: bold;
-      text-decoration: none;
-      color: #000;
-    }
+  &-home a {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-home img {
+    object-fit: cover;
+    min-width: 30px;
+    max-width: 50px;
   }
 
   &-menu {
     position: relative;
-    margin-right: 20px;
 
     &-trigger {
       cursor: pointer;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
     }
 
     &-dropdown {
       position: absolute;
       top: 100%;
-      left: 0; /* Alineamos el dropdown desde el lado izquierdo del contenedor del botón */
+      left: 0;
       background-color: #fff;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
       border: 1px solid #ccc;
       border-radius: 5px;
-      padding: 10px;
+      padding: 12px;
       min-width: 12vh;
-      max-width: 200px;
-      width: 100%;
-      z-index: 2000; /* Aseguramos que el dropdown tenga un z-index más alto */
-      margin-top: 5px;
-      overflow: hidden;
-      
+      max-width: 250px;
+      z-index: 2000;
+      margin-top: 2.3vh;
+
       ul {
         list-style: none;
         margin: 0;
         padding: 0;
 
         li {
-          padding: 5px 0;
+          padding: 8px 0;
 
           a {
             text-decoration: none;
@@ -61,13 +76,14 @@
   }
 
   &-search {
-    flex: 1;
-    margin-right: 20px;
-
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 40%;
+    
     input {
-      padding: 10px;
+      padding: 8px;
       width: 100%;
-      font-size: 16px;
+      font-size: 12px;
       border-radius: 5px;
       border: 1px solid #ccc;
       text-align: center;
@@ -79,43 +95,69 @@
     align-items: center;
 
     a {
-      font-size: 20px;
-      margin-left: 20px;
+      font-size: 22px;
+      margin-left: 12px;
+      font-weight: bold;
+      color: #007bff;
     }
 
     button {
-      margin-left: 20px;
+      font-size: 18px;
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3;
+      }
     }
   }
 
   &-theme {
     position: relative;
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 
     button {
+      min-width: 30px;
+      max-width: 50px;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+
+      img{
+        min-width: 30px;
+        max-width: 60px;
+
+      }
+
     }
 
     .theme-dropdown {
       position: absolute;
       top: 100%;
-      right: 0%;
+      right: 0;
       background-color: #fff;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
       border: 1px solid #ccc;
       border-radius: 5px;
-      padding: 10px;
+      padding: 8px;
       min-width: 12vh;
       max-width: 400px;
-      width: 100%;
-      z-index: 2000; /* Aseguramos que el dropdown esté encima de otros elementos */
-      margin-top: 5px;
-      overflow: hidden;
-      
+      z-index: 2000;
+      margin-top: 1.2vh;
+
       .theme-option {
         padding: 10px;
         cursor: pointer;

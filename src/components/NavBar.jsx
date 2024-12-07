@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../sass/components/_NavBar.scss';
 import '../sass/themes/theme.scss';
+import Icon from '../assets/img/Paimon_Icon.png'; 
+import ThemeIcon from '../assets/img/Theme_Icon.png';
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,7 +41,7 @@ const NavBar = () => {
     <header className="navbar">
       <div className="navbar-home">
         <Link to="/">
-          <span role="img" aria-label="home">🏠</span>
+          <img src={Icon} alt="Home" />
         </Link>
       </div>
 
@@ -79,7 +81,7 @@ const NavBar = () => {
       {/* Botón de cambio de tema */}
       <div className="navbar-theme">
         <button onClick={toggleThemeMenu} className="theme-button">
-          <span role="img" aria-label="theme">🌙</span>
+          <img src={ThemeIcon} alt="Theme" />
         </button>
         {isThemeMenuOpen && (
           <div className="theme-dropdown">

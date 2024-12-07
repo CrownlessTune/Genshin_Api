@@ -8,7 +8,9 @@ const PublicLayout = ({ children, mainStyle }) => {
       display: 'flex',
       flexDirection: 'column',
       minHeight: '100vh',
-      boxSizing: 'border-box', // Esto asegura que padding y margen no afecten al tamaño total
+      boxSizing: 'border-box', // Asegura que padding y margen no afecten al tamaño total
+      width: '100%', // Asegura que el layout no sea más grande que el 100% de la pantalla
+      overflowX: 'hidden', // Previene el desbordamiento horizontal
     }}>
       <NavBar />
       <main
@@ -16,7 +18,9 @@ const PublicLayout = ({ children, mainStyle }) => {
           flex: 1,
           padding: '20px',
           textAlign: 'center',
-          overflowY: 'auto', // Esto asegura que el contenido se desplace si es necesario sin afectar el tamaño del contenedor
+          overflowY: 'auto', // Asegura que el contenido se desplace si es necesario sin afectar el tamaño del contenedor
+          maxWidth: '100%', // Asegura que el contenido no exceda el ancho de la página
+          width: '100%', // Asegura que el main ocupe todo el ancho disponible
           ...mainStyle,
         }}
       >

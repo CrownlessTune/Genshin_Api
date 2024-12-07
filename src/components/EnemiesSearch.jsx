@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../sass/components/_EnemiesSearch.scss';
+import PaimonConfuse from '../assets/img/Paimon_Confuse.png'; // Importar imagen de Paimon
 
 const EnemiesSearch = () => {
   const [enemies, setEnemies] = useState([]);
@@ -11,23 +12,14 @@ const EnemiesSearch = () => {
     type: '', // "Elite Enemies", "Common Enemies"
     region: '', // Region-specific enemies
   });
+  const enemiesGridRef = useRef(null);
 
-  // URLs alternativas para las imágenes
-  const imageFallbacks = ['portrait', 'icon'];
+  const getImageUrl = (entityType, entityId) =>
+    `https://genshin.jmp.blue/${entityType}/${entityId}/portrait`;
 
-  const getImageUrl = (entityType, entityId, imageType) =>
-    `https://genshin.jmp.blue/${entityType}/${entityId}/${imageType}`;
-
-  const handleImageError = (e, entityType, entityId, currentAttempt = 0) => {
-    if (currentAttempt < imageFallbacks.length - 1) {
-      const nextType = imageFallbacks[currentAttempt + 1];
-      const nextUrl = getImageUrl(entityType, entityId, nextType);
-      e.target.src = nextUrl; // Cambia la URL al siguiente fallback
-      console.log(`Retrying with fallback: ${nextUrl}`);
-    } else {
-      e.target.src = 'https://via.placeholder.com/150'; // Imagen por defecto
-      console.log(`All fallbacks failed. Using placeholder for ${entityId}`);
-    }
+  const handleImageError = (e) => {
+    e.target.src = PaimonConfuse; // Mostrar Paimon inmediatamente si falla la carga inicial
+    console.log('Image failed to load. Using Paimon as fallback.');
   };
 
   useEffect(() => {
@@ -84,19 +76,39 @@ const EnemiesSearch = () => {
     return description;
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = enemiesGridRef.current;
+      if (container.scrollTop + container.clientHeight >= container.scrollHeight - 50) {
+        console.log('Reached the end of the scroll');
+        // Aquí puedes cargar más enemigos si es necesario.
+      }
+    };
+
+    const gridElement = enemiesGridRef.current;
+    if (gridElement) {
+      gridElement.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (gridElement) {
+        gridElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="enemies-search-container">
-      <h1>Enemies Search</h1>
       <div className="filters">
         <label>
           Type:
           <select name="type" onChange={handleFilterChange} value={filters.type}>
             <option value="">All</option>
             <option value="Elite Enemies">Elite Enemies</option>
-            <option value="Common Enemies">Common Enemies</option> {/* Solo las opciones restantes */}
+            <option value="Common Enemies">Common Enemies</option>
           </select>
         </label>
         <label>
@@ -111,16 +123,23 @@ const EnemiesSearch = () => {
           </select>
         </label>
       </div>
-      <div className="enemies-grid">
+      <div
+        className="enemies-grid"
+        ref={enemiesGridRef}
+        style={{
+          maxHeight: '400px',
+          overflowY: 'auto',
+        }}
+      >
         {filteredEnemies.length === 0 && <div>No enemies found.</div>}
         {filteredEnemies.map((enemy) => (
           <div className="enemy-card" key={enemy.id}>
             <h3>{enemy.name}</h3>
             <img
-              src={getImageUrl('enemies', enemy.id, 'portrait')}
+              src={getImageUrl('enemies', enemy.id)}
               alt={enemy.name}
               className="enemy-image"
-              onError={(e) => handleImageError(e, 'enemies', enemy.id, 0)}
+              onError={handleImageError}
             />
             <p>Type: {enemy.type || 'Unknown'}</p>
             <p>Region: {enemy.region || 'Unknown'}</p>
