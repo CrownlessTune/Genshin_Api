@@ -7,47 +7,64 @@
     justify-content: center;
 
     .card {
-      min-height: 25vh; /* Reducir un poco la altura */
-      max-height: 25vh; /* Reducir un poco la altura */
-      margin: 8px; /* Reducir los márgenes */
+      min-height: 25vh;
+      max-height: 25vh;
+      margin: 8px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      padding: 8px; /* Reducir el padding */
-      width: 180px; /* Reducir el ancho */
+      padding: 8px;
+      width: 180px;
       text-align: center;
       background-color: #f9f9f9;
 
       .card-image {
         object-fit: cover;
-        min-height: 18vh; /* Reducir la altura de la imagen */
-        max-height: 18vh; /* Reducir la altura de la imagen */
-        max-width: 20vh; /* Reducir el ancho de la imagen */
+        min-height: 18vh;
+        max-height: 18vh;
+        max-width: 20vh;
       }
 
       .card-title {
-        font-size: 14px; /* Reducir el tamaño de la fuente */
+        font-size: 14px;
         font-weight: bold;
       }
     }
   }
 
   .pagination {
-    margin: 16px 0; /* Reducir el margen de la paginación */
+    margin: 16px 0;
+
+    span{
+
+      font-size: 20px;
+
+    }
 
     button {
-      margin: 0 8px; /* Reducir el margen entre los botones */
-      padding: 6px 12px; /* Reducir el tamaño del padding */
-      font-size: 12px; /* Reducir el tamaño de la fuente */
+      margin: 0 8px;
+      padding: 10px 20px; /* Aumentar tamaño del padding para hacer los botones más grandes */
+      font-size: 16px; /* Aumentar el tamaño de la fuente */
       border: none;
-      border-radius: 4px;
+      border-radius: 8px; /* Redondear un poco más los bordes */
       background-color: #007bff;
       color: #fff;
       cursor: pointer;
+      transition: background-color 0.3s;
 
       &:disabled {
         background-color: #ccc;
         cursor: not-allowed;
       }
+
+      &:hover {
+        background-color: #0056b3; /* Cambiar color al pasar el mouse por encima */
+      }
+    }
+
+    .page-info {
+      font-size: 18px; /* Aumentar tamaño del texto de la paginación */
+      color: #333;
+      margin-top: 10px;
     }
   }
 }
