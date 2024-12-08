@@ -7,6 +7,7 @@ import Characters from "../pages/characters";
 import Community from "../pages/community";
 import Regions from "../pages/regions";
 import Enemies from "../pages/enemies";
+import User from "../pages/user";
 import { auth } from "../config/firebase";
 
 
@@ -18,6 +19,11 @@ export const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact />,
+  },
+  {
+    path: "/user",
+    element: <User />,
+    requiresAuth: true,
   },
   {
     path: "/login",

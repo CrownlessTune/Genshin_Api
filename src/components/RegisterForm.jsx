@@ -1,10 +1,11 @@
 import React from "react";
 import Swal from "sweetalert2";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase"; // Asegúrate de importar db
+import { doc, setDoc, getDoc, query, where, getDocs, collection } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../sass/components/_RegisterForm.scss"
+import "../sass/components/_RegisterForm.scss";
 
 const RegisterForm = () => {
   const initialValues = {
@@ -30,16 +31,58 @@ const RegisterForm = () => {
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const { email, password } = values;
+    const { username, email, password } = values;
 
     try {
+      // Verificar si el email o el username ya existen en la base de datos
+      const userQuery = query(
+        collection(db, "users"),
+        where("email", "==", email)
+      );
+      const usernameQuery = query(
+        collection(db, "users"),
+        where("username", "==", username)
+      );
+      
+      const emailSnapshot = await getDocs(userQuery);
+      const usernameSnapshot = await getDocs(usernameQuery);
+
+      if (!emailSnapshot.empty) {
+        Swal.fire({
+          title: "Error",
+          text: "This email is already registered.",
+          icon: "error",
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      if (!usernameSnapshot.empty) {
+        Swal.fire({
+          title: "Error",
+          text: "This username is already taken.",
+          icon: "error",
+        });
+        setSubmitting(false);
+        return;
+      }
+
+      // Si no existen, proceder con el registro del usuario
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
+
+      await setDoc(doc(db, "users", uid), {
+        username,
+        email,
+        favorites: [],
+      });
+      console.log(`User ${uid} saved in Firestore`);
+
       Swal.fire({
         title: "Success",
         text: "User registered successfully.",
         icon: "success",
       });
-      console.log("Registered user:", userCredential.user);
       resetForm();
     } catch (error) {
       Swal.fire({

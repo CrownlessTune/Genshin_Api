@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
@@ -7,6 +8,8 @@ import * as Yup from "yup";
 import "../sass/components/_LoginForm.scss"; // Importa el archivo SCSS
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
   const initialValues = {
     email: "",
     password: "",
@@ -33,6 +36,7 @@ const LoginForm = () => {
       });
       console.log("Logged in user:", userCredential.user);
       resetForm();
+      navigate("/user"); // Redirige a la página de usuario
     } catch (error) {
       Swal.fire({
         title: "Error",

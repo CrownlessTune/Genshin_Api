@@ -6,9 +6,7 @@ const UserProfile = React.lazy(() => import('../components/UserProfile'));
 const User = () => {
   return (
     <PrivateLayout>
-      <Suspense fallback={<div>Loading user profile...</div>}>
-        <UserProfile />
-      </Suspense>
+        <UserProfile></UserProfile>
     </PrivateLayout>
   );
 };

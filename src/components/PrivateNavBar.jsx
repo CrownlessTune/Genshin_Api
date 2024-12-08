@@ -1,140 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import '../sass/components/_NavBar.scss';
+import '../sass/themes/theme.scss';
+import Icon from '../assets/img/Paimon_Icon.png'; 
+import ThemeIcon from '../assets/img/Theme_Icon.png';
+import { auth, db } from '../config/firebase'; // Asegúrate de importar auth y db
+import { doc, getDoc } from 'firebase/firestore';
 
-const PrivateNavBar = ({ username, onLogout }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Para manejar el menú desplegable de navegación
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // Para manejar el menú desplegable del usuario
-  const [isSearchFocused, setIsSearchFocused] = useState(false); // Para manejar el enfoque de la búsqueda
+const PrivateNavBar = ({ onLogout }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); 
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); 
+  const [currentTheme, setCurrentTheme] = useState('Celestia');
+  const [username, setUsername] = useState('');
+  const themes = ['Celestia', 'Hydro', 'Dendro', 'Pyro', 'Cryo', 'Anemo', 'Geo', 'Abyss'];
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const fetchUserData = async () => {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
 
-  const toggleUserMenu = () => {
-    setIsUserMenuOpen((prev) => !prev);
-    console.log(isUserMenuOpen); // Para depuración
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUsername(userData.username); // Establecer el nombre de usuario desde Firestore
+        }
+      };
+
+      fetchUserData();
+    }
+  }, []);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const toggleUserMenu = () => setIsUserMenuOpen((prev) => !prev);
+  const toggleThemeMenu = () => setIsThemeMenuOpen((prev) => !prev);
+
+  const handleThemeChange = (themeName) => {
+    setCurrentTheme(themeName);
+    document.body.classList.remove(...themes);
+    document.body.classList.add(themeName);
+    localStorage.setItem('theme', themeName);
   };
 
   return (
-    <header style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: '10px',
-      borderBottom: '1px solid #ccc',
-      alignItems: 'center',
-      backgroundColor: '#f8f8f8',
-    }}>
-      {/* Icono Home */}
-      <div style={{ marginRight: '20px' }}>
-        <Link to="/" style={{ fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
-          <span role="img" aria-label="home">🏠</span>
+    <header className="navbar">
+      {/* Icono de Inicio */}
+      <div className="navbar-home">
+        <Link to="/">
+          <img src={Icon} alt="Home" />
         </Link>
       </div>
 
-      {/* Menú Desplegable de Navegación */}
-      <div style={{ position: 'relative', marginRight: '20px' }}>
-        <button onClick={toggleMenu} style={{
-          cursor: 'pointer', 
-          fontSize: '18px', 
-          fontWeight: 'bold', 
-          background: 'none', 
-          border: 'none', 
-          color: '#000'
-        }}>
+      {/* Menú de Navegación */}
+      <div className="navbar-menu">
+        <div onClick={toggleMenu} className="navbar-menu-trigger">
           Menu
-        </button>
+        </div>
         {isMenuOpen && (
-          <div style={{
-            position: 'absolute',
-            top: '100%',
-            left: '0',
-            backgroundColor: '#fff',
-            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            padding: '10px',
-            minWidth: '150px',
-            zIndex: '1000',
-          }}>
-            <ul style={{ listStyle: 'none', margin: '0', padding: '0' }}>
-              <li style={{ padding: '5px 0' }}>
-                <Link to="/character">Character</Link>
-              </li>
-              <li style={{ padding: '5px 0' }}>
-                <Link to="/enemies">Enemies</Link>
-              </li>
-              <li style={{ padding: '5px 0' }}>
-                <Link to="/regions">Regions</Link>
-              </li>
-              <li style={{ padding: '5px 0' }}>
-                <Link to="/community">Community</Link>
-              </li>
+          <div className="navbar-menu-dropdown">
+            <ul>
+              <li><Link to="/regions">Regions</Link></li>
+              <li><Link to="/characters">Characters</Link></li>
+              <li><Link to="/enemies">Enemies</Link></li>
+              <li><Link to="/community">Community</Link></li>
             </ul>
           </div>
         )}
       </div>
 
-      {/* Área de búsqueda */}
-      <div style={{ flex: 1, marginRight: '20px' }}>
-        <textarea
-          placeholder="Search..."
-          rows={1}
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
-          style={{
-            padding: '10px',
-            width: '100%',
-            fontSize: '16px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            textAlign: 'center',
-            backgroundColor: isSearchFocused ? '#fff' : '#f1f1f1',
-          }}
-        />
+      {/* Barra de Búsqueda */}
+      <div className="navbar-search">
+        <input type="text" placeholder="Search..." />
       </div>
 
-      {/* Menú desplegable de Usuario */}
-      <div style={{ position: 'relative' }}>
-        <button onClick={toggleUserMenu} style={{
-          cursor: 'pointer', 
-          fontSize: '18px', 
-          fontWeight: 'bold', 
-          background: 'none', 
-          border: 'none', 
-          color: '#000'
-        }}>
-          {username}
+      {/* Menú de Usuario */}
+      <div className="navbar-user">
+        <button onClick={toggleUserMenu} className="user-button">
+          {username || 'Loading...'}
         </button>
         {isUserMenuOpen && (
-          <div style={{
-            position: 'absolute',
-            top: '100%',
-            left: '0',
-            backgroundColor: '#fff',
-            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            padding: '10px',
-            minWidth: '150px',
-            zIndex: '1000',
-          }}>
-            <ul style={{ listStyle: 'none', margin: '0', padding: '0' }}>
-              <li style={{ padding: '5px 0' }}>
-                <button disabled style={{ cursor: 'not-allowed' }}>Change Account</button>
-              </li>
-              <li style={{ padding: '5px 0' }}>
-                <button onClick={onLogout}>Logout</button>
-              </li>
+          <div className="user-dropdown">
+            <ul>
+              <li><Link to="/user">Profile</Link></li> {/* Modificado a /user */}
+              <li><button onClick={onLogout}>Logout</button></li>
             </ul>
           </div>
         )}
       </div>
 
-      {/* Icono para cambiar tema */}
-      <div style={{ marginLeft: '20px' }}>
-        <Link to="/theme" style={{ fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', color: '#000' }}>
-          <span role="img" aria-label="theme">🌙</span>
-        </Link>
+      {/* Botón de cambio de tema */}
+      <div className="navbar-theme">
+        <button onClick={toggleThemeMenu} className="theme-button">
+          <img src={ThemeIcon} alt="Theme" />
+        </button>
+        {isThemeMenuOpen && (
+          <div className="theme-dropdown">
+            {themes.map((themeName) => (
+              <button
+                key={themeName}
+                className={`theme-option ${currentTheme === themeName ? 'active' : ''}`}
+                onClick={() => handleThemeChange(themeName)}
+              >
+                {themeName}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );
