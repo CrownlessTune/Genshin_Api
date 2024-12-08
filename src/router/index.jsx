@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../pages/Home";
+import Home from "@/pages/Home";  // Usando el alias '@' para resolver la ruta desde 'src'
 import Contact from "../pages/contact";
 import Error404 from "../pages/error404";
 import Login from "../pages/login";
