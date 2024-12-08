@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { auth, db } from '../config/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import Paimon404 from '../assets/img/Paimon_Confuse.png';
+import Paimon404 from '../assets/img/Paimon_Confuse.png';  // Asegúrate de que la ruta sea correcta
 import Favourite from './Favourite'; // Importar el componente Favourite
 import '../sass/components/_UserProfile.scss';
 
 const UserProfile = () => {
   const [profileImage, setProfileImage] = useState(() => {
     const savedImage = localStorage.getItem('profileImage');
-    return savedImage || Paimon404;
+    return savedImage ? savedImage : Paimon404;  // Se asegura que use Paimon404 como valor predeterminado
   });
   const [bio, setBio] = useState('');
   const [slogan, setSlogan] = useState('');
@@ -119,6 +119,7 @@ const UserProfile = () => {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Enter your bio"
+              style={{ height: isBioEditing ? 'auto' : '30px' }} // Ajuste de tamaño
             />
             <button className="save-button" onClick={handleBioSubmit}>
               Save Bio
@@ -139,6 +140,7 @@ const UserProfile = () => {
               value={slogan}
               onChange={(e) => setSlogan(e.target.value)}
               placeholder="Enter your slogan"
+              style={{ width: isSloganEditing ? 'auto' : '100%' }} // Ajuste de tamaño
             />
             <button className="save-button" onClick={handleSloganSubmit}>
               Save Slogan

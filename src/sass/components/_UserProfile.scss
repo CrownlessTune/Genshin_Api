@@ -4,11 +4,13 @@ $primary-color: #ff9d76;
 $secondary-color: #f1f1f1;
 $button-bg-color: #ff7a40;
 $button-hover-bg-color: #ff6433;
-$text-color: #333;
+$text-color: #191919;
 
 $user-profile-border-radius: 8px;
 
 .user-profile-container {
+    border: #191919;
+    color: #191919;
     background-color: $user-profile-bg-color;
     padding: 20px;
     border-radius: $user-profile-border-radius;
@@ -53,7 +55,7 @@ $user-profile-border-radius: 8px;
 
 .save-button {
   background-color: $button-bg-color;
-  color: white;
+  color: #191919;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
