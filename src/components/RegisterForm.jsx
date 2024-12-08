@@ -1,8 +1,8 @@
 import React from "react";
 import Swal from "sweetalert2";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../config/firebase"; // Asegúrate de importar db
-import { doc, setDoc, getDoc, query, where, getDocs, collection } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { auth, db } from "../config/firebase";
+import { doc, setDoc, getDocs, query, where, collection } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "../sass/components/_RegisterForm.scss";
@@ -35,15 +35,9 @@ const RegisterForm = () => {
 
     try {
       // Verificar si el email o el username ya existen en la base de datos
-      const userQuery = query(
-        collection(db, "users"),
-        where("email", "==", email)
-      );
-      const usernameQuery = query(
-        collection(db, "users"),
-        where("username", "==", username)
-      );
-      
+      const userQuery = query(collection(db, "users"), where("email", "==", email));
+      const usernameQuery = query(collection(db, "users"), where("username", "==", username));
+
       const emailSnapshot = await getDocs(userQuery);
       const usernameSnapshot = await getDocs(usernameQuery);
 
@@ -67,22 +61,27 @@ const RegisterForm = () => {
         return;
       }
 
-      // Si no existen, proceder con el registro del usuario
+      // Si no existen, proceder con el registro del usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const { uid } = userCredential.user;
 
+      // Esperar a que el usuario esté autenticado y luego agregar datos a Firestore
       await setDoc(doc(db, "users", uid), {
         username,
         email,
         favorites: [],
       });
+
       console.log(`User ${uid} saved in Firestore`);
 
+      // Mostrar alerta de éxito
       Swal.fire({
         title: "Success",
         text: "User registered successfully.",
         icon: "success",
       });
+
+      // Restablecer el formulario
       resetForm();
     } catch (error) {
       Swal.fire({

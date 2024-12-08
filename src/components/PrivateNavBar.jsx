@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import '../sass/components/_NavBar.scss';
+import { Link, useNavigate } from 'react-router-dom';
+import '../sass/components/_PrivateNavBar.scss';
 import '../sass/themes/theme.scss';
 import Icon from '../assets/img/Paimon_Icon.png'; 
 import ThemeIcon from '../assets/img/Theme_Icon.png';
-import { auth, db } from '../config/firebase'; // Asegúrate de importar auth y db
+import { auth, db } from '../config/firebase';
+import { signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
 const PrivateNavBar = ({ onLogout }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); 
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('Celestia');
   const [username, setUsername] = useState('');
   const themes = ['Celestia', 'Hydro', 'Dendro', 'Pyro', 'Cryo', 'Anemo', 'Geo', 'Abyss'];
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -24,11 +27,15 @@ const PrivateNavBar = ({ onLogout }) => {
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setUsername(userData.username); // Establecer el nombre de usuario desde Firestore
+          setUsername(userData.username);
+        } else {
+          console.error('No such user!');
         }
       };
 
       fetchUserData();
+    } else {
+      console.log('No user is currently logged in.');
     }
   }, []);
 
@@ -43,16 +50,23 @@ const PrivateNavBar = ({ onLogout }) => {
     localStorage.setItem('theme', themeName);
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during sign out: ', error);
+    }
+  };
+
   return (
     <header className="navbar">
-      {/* Icono de Inicio */}
       <div className="navbar-home">
         <Link to="/">
           <img src={Icon} alt="Home" />
         </Link>
       </div>
 
-      {/* Menú de Navegación */}
       <div className="navbar-menu">
         <div onClick={toggleMenu} className="navbar-menu-trigger">
           Menu
@@ -69,27 +83,24 @@ const PrivateNavBar = ({ onLogout }) => {
         )}
       </div>
 
-      {/* Barra de Búsqueda */}
       <div className="navbar-search">
         <input type="text" placeholder="Search..." />
       </div>
 
-      {/* Menú de Usuario */}
       <div className="navbar-user">
-        <button onClick={toggleUserMenu} className="user-button">
+        <div onClick={toggleUserMenu} className="navbar-user-trigger">
           {username || 'Loading...'}
-        </button>
+        </div>
         {isUserMenuOpen && (
-          <div className="user-dropdown">
+          <div className="navbar-user-dropdown">
             <ul>
-              <li><Link to="/user">Profile</Link></li> {/* Modificado a /user */}
-              <li><button onClick={onLogout}>Logout</button></li>
+              <li><Link to="/user">Profile</Link></li>
+              <li><div onClick={handleLogout}>Logout</div></li>
             </ul>
           </div>
         )}
       </div>
 
-      {/* Botón de cambio de tema */}
       <div className="navbar-theme">
         <button onClick={toggleThemeMenu} className="theme-button">
           <img src={ThemeIcon} alt="Theme" />

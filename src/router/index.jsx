@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "@/pages/Home";  // Usando el alias '@' para resolver la ruta desde 'src'
-import Contact from "../pages/contact";
-import Error404 from "../pages/error404";
-import Login from "../pages/login";
-import Characters from "../pages/characters";
-import Community from "../pages/community";
-import Regions from "../pages/regions";
-import Enemies from "../pages/enemies";
+import Contact from "../pages/Contact";
+import Error404 from "../pages/Error404";
+import Login from "../pages/Login";
+import Characters from "../pages/Characters";
+import Community from "../pages/Community";
+import Regions from "../pages/Regions";
+import Enemies from "../pages/Enemies";
 import User from "../pages/user";
 import { auth } from "../config/firebase";
 

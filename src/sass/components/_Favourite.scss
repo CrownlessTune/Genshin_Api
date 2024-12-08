@@ -1,0 +1,167 @@
+.api-pagination {
+  text-align: center;
+  width: 80%;
+  max-width: 1200px;
+  min-width: 320px;
+  margin: 0 auto;
+
+  .favorites-list {
+    margin-top: 20px;
+    text-align: center;
+
+    h2 {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .favorite-card {
+      display: inline-block;
+      margin: 8px;
+      width: 140px; // Establece un tamaño fijo
+      text-align: center;
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px;
+
+      .favorite-image {
+        object-fit: cover;
+        width: 100px; // Establece un tamaño fijo para las imágenes
+        height: 100px;
+        border-radius: 8px;
+      }
+
+      p {
+        font-size: 12px;
+        color: #191919;
+      }
+    }
+  }
+
+  .edit-favorites-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .item-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .card {
+        margin: 8px;
+        width: 140px; // Fijo para todas las cards
+        text-align: center;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px;
+
+        .card-image {
+          object-fit: cover;
+          width: 100px; // Ajusta el tamaño de las imágenes
+          height: 100px;
+          border-radius: 8px;
+        }
+
+        .card-title {
+          font-size: 12px;
+          font-weight: bold;
+          color: #191919;
+        }
+
+        .add-to-fav-btn {
+          margin-top: 8px;
+          padding: 6px 12px;
+          font-size: 12px;
+          border: none;
+          border-radius: 8px;
+          background-color: #28a745;
+          color: #fff;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #218838;
+          }
+        }
+      }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+
+      button {
+        padding: 10px;
+        font-size: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+
+        &:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+
+      span {
+        font-size: 14px;
+        align-self: center;
+      }
+    }
+
+    .close-modal-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #dc3545;
+      color: #fff;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  }
+}

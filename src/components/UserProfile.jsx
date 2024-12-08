@@ -1,163 +1,156 @@
-import React, { useState, useEffect } from 'react';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { auth, db } from '../config/firebase'; 
+import React, { useState, useEffect, useRef } from 'react';
+import { auth, db } from '../config/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import Paimon404 from '../assets/img/Paimon_Confuse.png'; 
+import Paimon404 from '../assets/img/Paimon_Confuse.png';
+import Favourite from './Favourite'; // Importar el componente Favourite
+import '../sass/components/_UserProfile.scss';
 
 const UserProfile = () => {
-  const [profileImage, setProfileImage] = useState(Paimon404);
+  const [profileImage, setProfileImage] = useState(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    return savedImage || Paimon404;
+  });
   const [bio, setBio] = useState('');
   const [slogan, setSlogan] = useState('');
-  const [featured, setFeatured] = useState([]);
   const [username, setUsername] = useState('');
   const [userId, setUserId] = useState('');
   const [isBioEditing, setIsBioEditing] = useState(false);
   const [isSloganEditing, setIsSloganEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    const user = auth.currentUser;
-    
-    if (user) {
-      const fetchUserData = async () => {
+    const fetchUserData = async () => {
+      setLoading(true);
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.warn('No authenticated user found');
+        setLoading(false);
+        return;
+      }
+
+      try {
         const userDocRef = doc(db, 'users', user.uid);
         const userDoc = await getDoc(userDocRef);
-        
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setUsername(userData.username);
-          setBio(userData.bio || ''); 
-          setSlogan(userData.slogan || ''); 
-          setFeatured(userData.featured || []);
-          setUserId(user.uid);
-          setProfileImage(userData.profileImage || Paimon404); 
+
+        if (!userDoc.exists()) {
+          console.warn('User document does not exist in Firestore');
+          setLoading(false);
+          return;
         }
-      };
 
-      fetchUserData();
-    }
+        const userData = userDoc.data();
+        setUsername(userData.username || 'Anonymous');
+        setBio(userData.bio || '');
+        setSlogan(userData.slogan || '');
+        setUserId(user.uid);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
-
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const storage = getStorage();
-      const imageRef = ref(storage, 'profileImages/' + userId); 
-      uploadBytes(imageRef, file).then(() => {
-        getDownloadURL(imageRef).then((downloadURL) => {
-
-          updateProfileImageInDB(downloadURL);
-        });
-      });
+    if (!file) {
+      console.error('No file selected');
+      return;
     }
-  };
-  
-  // Función para actualizar la URL de la imagen en Firestore
-  const updateProfileImageInDB = async (imageURL) => {
-    const userDocRef = doc(db, 'users', userId);
-    await updateDoc(userDocRef, { profileImage: imageURL });
-    setProfileImage(imageURL); // Actualiza el estado local de la imagen
+
+    const imageURL = URL.createObjectURL(file);
+    localStorage.setItem('profileImage', imageURL);
+    setProfileImage(imageURL);
   };
 
-  // Función para actualizar la biografía en Firestore
-  const handleBioSubmit = async () => {
-    const userDocRef = doc(db, 'users', userId);
-    await updateDoc(userDocRef, { bio: bio });
-    setIsBioEditing(false); // Cierra el editor de la biografía
-  };
-
-  // Función para actualizar el slogan en Firestore
-  const handleSloganSubmit = async () => {
-    const userDocRef = doc(db, 'users', userId);
-    await updateDoc(userDocRef, { slogan: slogan });
-    setIsSloganEditing(false); // Cierra el editor del slogan
-  };
-
-  // Agregar contenido destacado
-  const handleFeaturedAdd = (content) => {
-    if (featured.length < 2 && !featured.includes(content)) {
-      setFeatured([...featured, content]);
+  const handleBioSubmit = () => {
+    if (userId) {
+      const userDocRef = doc(db, 'users', userId);
+      updateDoc(userDocRef, { bio });
     }
+    setIsBioEditing(false);
   };
 
-  // Eliminar contenido destacado
-  const handleFeaturedRemove = (content) => {
-    setFeatured(featured.filter(item => item !== content));
+  const handleSloganSubmit = () => {
+    if (userId) {
+      const userDocRef = doc(db, 'users', userId);
+      updateDoc(userDocRef, { slogan });
+    }
+    setIsSloganEditing(false);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div>
-      {/* Imagen de perfil */}
-      <div>
+    <div className="user-profile-container">
+      <div className="profile-header">
         <img
+          className="profile-image"
           src={profileImage}
           alt="Profile"
-          style={{ width: '60px', height: '60px', borderRadius: '50%' }}
-          onClick={() => document.getElementById('profileImageInput').click()} // Trigger file input on click
+          onClick={() => fileInputRef.current.click()}
         />
         <input
           type="file"
-          id="profileImageInput"
+          ref={fileInputRef}
           style={{ display: 'none' }}
           accept="image/*"
           onChange={handleProfileImageChange}
         />
       </div>
 
-      {/* Información del usuario */}
-      <div>
-        <h2>{username}</h2>
-        <p>ID: {userId}</p>
+      <h2>{username}</h2>
+      <p>ID: {userId}</p>
 
-        {/* Biografía */}
-        <div onClick={() => setIsBioEditing(true)}>
-          <strong>Bio:</strong>
-          {!isBioEditing ? (
-            <p>{bio || 'Click here to add your bio'}</p>
-          ) : (
-            <div>
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                placeholder="Enter your bio"
-              />
-              <button onClick={handleBioSubmit}>Save Bio</button>
-            </div>
-          )}
-        </div>
-
-        {/* Slogan */}
-        <div onClick={() => setIsSloganEditing(true)}>
-          <strong>Slogan:</strong>
-          {!isSloganEditing ? (
-            <p>{slogan || 'Click here to add your slogan'}</p>
-          ) : (
-            <div>
-              <input
-                type="text"
-                value={slogan}
-                onChange={(e) => setSlogan(e.target.value)}
-                placeholder="Enter your slogan"
-              />
-              <button onClick={handleSloganSubmit}>Save Slogan</button>
-            </div>
-          )}
-        </div>
+      <div onClick={() => setIsBioEditing(true)}>
+        <div className="section-title">Bio:</div>
+        {!isBioEditing ? (
+          <p>{bio || 'Click here to add your bio'}</p>
+        ) : (
+          <div>
+            <textarea
+              className="editable-textarea"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Enter your bio"
+            />
+            <button className="save-button" onClick={handleBioSubmit}>
+              Save Bio
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Contenido destacado */}
-      <div>
-        <h3>Featured Content</h3>
-        <ul>
-          {featured.map((item, index) => (
-            <li key={index}>
-              {item}
-              <button onClick={() => handleFeaturedRemove(item)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-        <button onClick={() => handleFeaturedAdd('New Wiki Content')}>Add Content</button>
+      <div onClick={() => setIsSloganEditing(true)}>
+        <div className="section-title">Slogan:</div>
+        {!isSloganEditing ? (
+          <p>{slogan || 'Click here to add your slogan'}</p>
+        ) : (
+          <div>
+            <input
+              className="editable-input"
+              type="text"
+              value={slogan}
+              onChange={(e) => setSlogan(e.target.value)}
+              placeholder="Enter your slogan"
+            />
+            <button className="save-button" onClick={handleSloganSubmit}>
+              Save Slogan
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Eliminar la sección de Featured Content aquí */}
+
+      {/* Integrar el componente Favourite */}
+      <Favourite />
     </div>
   );
 };
