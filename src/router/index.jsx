@@ -13,7 +13,7 @@ import { auth } from "../config/firebase";
 
 export const router = createBrowserRouter([
   {
-    path: "/Genshin_Api",
+    path: "/",
     element: <Home />, 
   },
   {
