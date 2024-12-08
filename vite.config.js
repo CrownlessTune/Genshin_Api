@@ -5,9 +5,10 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/Genshin_Api/', // Sustituye <repo-name> con el nombre exacto de tu repositorio
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // Configura '@' como alias para la carpeta src
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 });
