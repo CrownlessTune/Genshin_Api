@@ -2,6 +2,7 @@ import React from 'react';
 import Swal from 'sweetalert2';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import '../sass/components/_ContactForm.scss';
 
 const ContactForm = ({ submitContact }) => {
   const initialValues = {
@@ -34,94 +35,73 @@ const ContactForm = ({ submitContact }) => {
     resetForm();
   };
 
-  const formStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '15px',
-    maxWidth: '400px',
-    margin: '0 auto',
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '10px',
-    fontSize: '14px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-  };
-
   return (
-    <div className="container">
+    <div className="contact-form-container">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form style={formStyle}>
-            <div>
+          <Form className="contact-form">
+            <div className="form-group">
               <Field
                 name="name"
                 type="text"
-                style={inputStyle}
+                className="input-field"
                 placeholder="Enter your name"
               />
-              <ErrorMessage name="name" component="div" style={{ color: 'red' }} />
+              <ErrorMessage name="name" component="div" className="error-message" />
             </div>
 
-            <div>
+            <div className="form-group">
               <Field
                 name="email"
                 type="email"
-                style={inputStyle}
+                className="input-field"
                 placeholder="Enter your email"
               />
-              <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
+              <ErrorMessage name="email" component="div" className="error-message" />
             </div>
 
-            <div>
-              <Field
-                name="reason"
-                as="select"
-                style={inputStyle}
-              >
+            <div className="form-group">
+              <Field name="reason" as="select" className="input-field">
                 <option value="">Select a reason</option>
                 <option value="support">Technical Support</option>
                 <option value="feedback">Feedback</option>
                 <option value="other">Other</option>
               </Field>
-              <ErrorMessage name="reason" component="div" style={{ color: 'red' }} />
+              <ErrorMessage name="reason" component="div" className="error-message" />
             </div>
 
-            <div>
+            <div className="form-group">
               <Field
                 name="message"
                 as="textarea"
-                style={inputStyle}
+                className="input-field textarea-field"
                 placeholder="Write your opinion"
               />
-              <ErrorMessage name="message" component="div" style={{ color: 'red' }} />
+              <ErrorMessage name="message" component="div" className="error-message" />
             </div>
 
-            <div>
+            <div className="form-group rating-group">
               <label>Rate the Page (1-5):</label>
               <Field
                 name="rating"
                 type="number"
                 min="1"
                 max="5"
-                style={inputStyle}
+                className="input-field"
               />
-              <ErrorMessage name="rating" component="div" style={{ color: 'red' }} />
+              <ErrorMessage name="rating" component="div" className="error-message" />
             </div>
 
             <button
-              className="btn btn-primary"
+              className="submit-button"
               type="submit"
               disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
           </Form>
         )}
