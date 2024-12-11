@@ -1,0 +1,51 @@
+@use "sass:math";
+@use "../core/_Variables" as variables; // Asegúrate de que la ruta sea correcta
+
+.public-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+
+  .navbar,
+  .footer {
+    height: variables.$nav-footer-height; // Uso de variables correctamente
+  }
+
+  main {
+    flex: 1;
+    padding: variables.$layout-padding;
+    text-align: center;
+    overflow-y: auto;
+    width: 100%; // Asegura que el contenido ocupe todo el ancho disponible
+    max-width: 100%; // Asegura que el contenido no exceda el ancho de la pantalla
+    height: calc(100vh - variables.$nav-footer-height); // Ajusta la altura del main para que no sea más grande que la pantalla
+  }
+}
+
+// Media Queries
+@media (max-width: 1024px) {
+  .public-layout {
+    main {
+      padding: math.div(variables.$layout-padding, 1.5);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .public-layout {
+    main {
+      padding: math.div(variables.$layout-padding, 2);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .public-layout {
+    main {
+      padding: math.div(variables.$layout-padding, 3);
+    }
+  }
+}

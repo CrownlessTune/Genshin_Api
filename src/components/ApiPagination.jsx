@@ -4,9 +4,11 @@ import PaimonConfuse from '../assets/img/Paimon_Confuse.png'; // Importar imagen
 import '../sass/components/_ApiPagination.scss';
 
 const ApiPagination = () => {
-  const [bossesData, setBossesData] = useState([]);
-  const [artifactsData, setArtifactsData] = useState([]);
-  const [charactersData, setCharactersData] = useState([]);
+  const [data, setData] = useState({
+    bosses: [],
+    artifacts: [],
+    characters: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,29 +25,23 @@ const ApiPagination = () => {
         axios.get('https://genshin.jmp.blue/characters/all?lang=en'),
       ]);
 
-      setBossesData(
-        bossesRes.data.map((boss) => ({
+      setData({
+        bosses: bossesRes.data.map((boss) => ({
           id: boss.name,
           name: boss.name,
           portrait: `https://genshin.jmp.blue/boss/weekly-boss/${boss.name.replace(/ /g, '-').toLowerCase()}/portrait`,
-        }))
-      );
-
-      setArtifactsData(
-        artifactsRes.data.map((artifact) => ({
+        })),
+        artifacts: artifactsRes.data.map((artifact) => ({
           id: artifact.id,
           name: artifact.name,
           portrait: `https://genshin.jmp.blue/artifacts/${artifact.id}/circlet-of-logos`,
-        }))
-      );
-
-      setCharactersData(
-        charactersRes.data.map((character) => ({
+        })),
+        characters: charactersRes.data.map((character) => ({
           id: character.id,
           name: character.name,
           portrait: `https://genshin.jmp.blue/characters/${character.id}/card`,
-        }))
-      );
+        })),
+      });
     } catch (err) {
       setError(`Error fetching data: ${err.message}`);
     } finally {
@@ -57,16 +53,9 @@ const ApiPagination = () => {
     if (imageUrls[item.id]) return imageUrls[item.id];
 
     const imageUrl = item.portrait || fallbackImage;
-
     const img = new Image();
-    img.onload = () => {
-      setImageUrls((prevState) => ({ ...prevState, [item.id]: imageUrl }));
-      localStorage.setItem(item.id, imageUrl);
-    };
-    img.onerror = () => {
-      setImageUrls((prevState) => ({ ...prevState, [item.id]: fallbackImage }));
-      localStorage.setItem(item.id, fallbackImage);
-    };
+    img.onload = () => setImageUrls((prev) => ({ ...prev, [item.id]: imageUrl }));
+    img.onerror = () => setImageUrls((prev) => ({ ...prev, [item.id]: fallbackImage }));
     img.src = imageUrl;
 
     return imageUrl;
@@ -76,46 +65,46 @@ const ApiPagination = () => {
     fetchData();
   }, []);
 
+  const allItems = [...data.bosses, ...data.artifacts, ...data.characters];
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = [...bossesData, ...artifactsData, ...charactersData].slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = allItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const isFirstPage = currentPage === 1;
-  const isLastPage = currentPage * itemsPerPage >= [...bossesData, ...artifactsData, ...charactersData].length;
+  const isLastPage = currentPage * itemsPerPage >= allItems.length;
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <div className="api-pagination">
-      <h1>Bosses, Artifacts & Characters</h1>
-
-      <div className="item-list">
-        {currentItems.length === 0 && <div>No items to display.</div>}
+    <main className="api-pagination">
+      <header>
+        <h1>Bosses, Artifacts & Characters</h1>
+      </header>
+      <section className="item-list">
         {currentItems.map((item) => (
-          <div className="card" key={item.id}>
+          <article className="card" key={item.id}>
             <img
               src={getImageUrl(item)}
               alt={item.name || 'Unnamed'}
               className="card-image"
             />
             <h3 className="card-title">{item.name}</h3>
-          </div>
+          </article>
         ))}
-      </div>
-
-      <div className="pagination">
+      </section>
+      <nav className="pagination">
         <button onClick={() => setCurrentPage((prev) => prev - 1)} disabled={isFirstPage}>
           Previous
         </button>
         <span>
-          Page {currentPage} of {Math.ceil([...bossesData, ...artifactsData, ...charactersData].length / itemsPerPage)}
+          Page {currentPage} of {Math.ceil(allItems.length / itemsPerPage)}
         </span>
         <button onClick={() => setCurrentPage((prev) => prev + 1)} disabled={isLastPage}>
           Next
         </button>
-      </div>
-    </div>
+      </nav>
+    </main>
   );
 };
 

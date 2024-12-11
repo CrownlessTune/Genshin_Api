@@ -1,102 +1,122 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import '../sass/components/_NavBar.scss';
 import '../sass/themes/theme.scss';
-import Icon from '../assets/img/Paimon_Icon.png'; 
+import Icon from '../assets/img/Paimon_Icon.png';
 import ThemeIcon from '../assets/img/Theme_Icon.png';
-const NavBar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); // Estado para controlar el desplegable del tema
-  const [currentTheme, setCurrentTheme] = useState('Celestia');
-  const themes = [
-    'Celestia', 'Hydro', 'Dendro', 'Pyro', 'Cryo', 'Anemo', 'Geo', 'Abyss'
-  ];
 
-  // Función para cambiar el tema aplicando la clase correspondiente al body
+const NavBar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('Celestia');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  const themeRef = useRef(null);
+
+  const themes = ['Celestia', 'Hydro', 'Dendro', 'Pyro', 'Cryo', 'Anemo', 'Geo', 'Abyss'];
+
   const handleThemeChange = (themeName) => {
     setCurrentTheme(themeName);
-    document.body.classList.remove(...themes); // Remueve todas las clases de tema
-    document.body.classList.add(themeName); // Añade la clase del tema seleccionado
-    localStorage.setItem('theme', themeName); // Guarda el tema seleccionado en el localStorage
+    document.body.classList.remove(...themes); // Elimina todas las clases anteriores
+    document.body.classList.add(themeName); // Añade la nueva clase del tema
+    localStorage.setItem('theme', themeName); // Guarda el tema en el localStorage
   };
 
-  // Comprobar si hay un tema guardado en el localStorage al cargar el componente
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
-    const initialTheme = storedTheme || 'Celestia'; // Si no hay tema guardado, usa Celestia por defecto
+    const initialTheme = storedTheme || 'Celestia'; // Si no hay tema guardado, se usa 'Celestia'
     setCurrentTheme(initialTheme);
-    document.body.classList.add(initialTheme); // Aplica la clase del tema guardado o Celestia
+    document.body.classList.add(initialTheme); // Aplica el tema al cargar
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
-
-  const toggleThemeMenu = () => {
-    setIsThemeMenuOpen((prev) => !prev); // Abre/cierra el menú del tema
-  };
+  // Cierra los menús al hacer clic fuera de ellos
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+      if (themeRef.current && !themeRef.current.contains(event.target)) {
+        setIsThemeMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <header className="navbar">
-      <div className="navbar-home">
-        <Link to="/">
-          <img src={Icon} alt="Home" />
+    <header className="navbar" role="banner">
+      <h1 className="navbar-logo">
+        <Link to="/" aria-label="Go to homepage">
+          <img src={Icon} alt="Paimon icon" />
         </Link>
-      </div>
+      </h1>
 
-      <div className="navbar-menu">
-        <div onClick={toggleMenu} className="navbar-menu-trigger">
+      <nav className="navbar-menu" ref={menuRef} aria-label="Main menu">
+        <button
+          className="navbar-menu-trigger"
+          aria-expanded={isMenuOpen ? 'true' : 'false'}
+          aria-controls="menu-list"
+          onClick={() => setIsMenuOpen((prev) => !prev)} // Abre o cierra el menú al hacer clic
+        >
           Menu
-        </div>
+        </button>
         {isMenuOpen && (
-          <div className="navbar-menu-dropdown">
-            <ul>
-              <li><Link to="/regions">Regions</Link></li>
-              <li><Link to="/characters">Characters</Link></li>
-              <li><Link to="/enemies">Enemies</Link></li>
-              <li><Link to="/community">Community</Link></li>
-            </ul>
-          </div>
+          <ul id="menu-list" className="navbar-menu-dropdown" role="menu">
+            <li><Link to="/regions" role="menuitem">Regions</Link></li>
+            <li><Link to="/characters" role="menuitem">Characters</Link></li>
+            <li><Link to="/enemies" role="menuitem">Enemies</Link></li>
+            <li><Link to="/community" role="menuitem">Community</Link></li>
+          </ul>
         )}
-      </div>
+      </nav>
 
-      <div className="navbar-search">
-        <input type="text" placeholder="Search..." />
-      </div>
+      <section className="navbar-search" aria-labelledby="search-label">
+        <label id="search-label" htmlFor="search-input"></label>
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Search..."
+          aria-label="Search for content"
+        />
+      </section>
 
-      {isLoggedIn ? (
-        <div className="navbar-auth">
-          <Link to="/profile">Profile</Link>
-          <button onClick={() => setIsLoggedIn(false)}>Log Out</button>
-        </div>
-      ) : (
-        <div className="navbar-auth">
-          <Link to="/login">
+      <section className="navbar-auth">
+        {isLoggedIn ? (
+          <>
+            <Link to="/profile" aria-label="Go to profile">Profile</Link>
+            <button onClick={() => setIsLoggedIn(false)}>Log Out</button>
+          </>
+        ) : (
+          <Link to="/login" aria-label="Go to login page">
             <button>Login</button>
           </Link>
-        </div>
-      )}
+        )}
+      </section>
 
-      {/* Botón de cambio de tema */}
-      <div className="navbar-theme">
-        <button onClick={toggleThemeMenu} className="theme-button">
-          <img src={ThemeIcon} alt="Theme" />
+      <section className="navbar-theme" ref={themeRef}>
+        <button
+          className="theme-button"
+          aria-label="Change theme"
+          onClick={() => setIsThemeMenuOpen((prev) => !prev)} // Abre o cierra el menú de temas
+        >
+          <img src={ThemeIcon} alt="Change theme" />
         </button>
         {isThemeMenuOpen && (
-          <div className="theme-dropdown">
+          <ul className="theme-dropdown" role="menu">
             {themes.map((themeName) => (
-              <button
-                key={themeName}
-                className={`theme-option ${currentTheme === themeName ? 'active' : ''}`}
-                onClick={() => handleThemeChange(themeName)}
-              >
-                {themeName}
-              </button>
+              <li key={themeName}>
+                <button
+                  className={`theme-option ${currentTheme === themeName ? 'active' : ''}`}
+                  onClick={() => handleThemeChange(themeName)}
+                  role="menuitem"
+                >
+                  {themeName}
+                </button>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-      </div>
+      </section>
     </header>
   );
 };

@@ -15,14 +15,13 @@ const Login = () => {
 
   return (
     <PublicLayout>
-      <h1 className="auth-title">Authentication</h1>
       <div className="auth-container">
         <div className="auth-section">
-          <h2 className="auth-subtitle">Register</h2>
+          <h1 className="auth-subtitle">Register</h1>
           <RegisterForm submitRegister={handleRegister} />
         </div>
         <div className="auth-section">
-          <h2 className="auth-subtitle">Login</h2>
+          <h1 className="auth-subtitle">Login</h1>
           <LoginForm submitLogin={handleLogin} />
         </div>
       </div>

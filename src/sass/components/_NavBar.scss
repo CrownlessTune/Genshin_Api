@@ -1,47 +1,54 @@
-.navbar { 
+.navbar {
   display: flex;
-  justify-content: space-evenly;
-  width: 100%;
-  padding: 8px;
-  border-bottom: 1px solid #191919;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
-  font-size: 18px;
+  font-size: 16px;
 
-  &-home,
-  &-menu,
-  &-search,
-  &-auth,
-  &-theme {
+  &-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px;
-  }
 
-  &-home a {
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #191919;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-right: 10px;
 
-  &-home img {
-    object-fit: cover;
-    min-width: 30px;
-    max-width: 50px;
+      &:hover {
+        transform: scale(1.2);
+        transition: transform 0.3s ease, filter 0.3s ease;
+        filter: brightness(1.2);
+      }
+    }
+
   }
 
   &-menu {
     position: relative;
 
     &-trigger {
-      cursor: pointer;
-      font-size: 24px;
+      background: none;
+      border: none;
+      font-size: 18px;
       font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+
+      &:hover {
+        color: #0056b3;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
     }
 
     &-dropdown {
@@ -49,26 +56,29 @@
       top: 100%;
       left: 0;
       background-color: #fff;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      border: 1px solid #191919;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
       border-radius: 5px;
-      padding: 12px;
-      min-width: 12vh;
-      max-width: 250px;
-      z-index: 2000;
-      margin-top: 2.3vh;
+      padding: 8px 0;
+      z-index: 1000;
 
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+      li {
+        list-style: none; /* Elimina el punto de la lista */
+        padding: 10px 20px;
 
-        li {
-          padding: 8px 0;
+        a {
+          text-decoration: none;
+          color: #333;
+          font-size: 16px;
+          transition: color 0.3s ease, transform 0.2s ease;
 
-          a {
-            text-decoration: none;
-            color: #191919;
+          &:hover {
+            color: #007bff;
+            transform: scale(1.1);
+          }
+
+          &:active {
+            transform: scale(0.95);
           }
         }
       }
@@ -77,71 +87,86 @@
 
   &-search {
     flex-grow: 1;
-    flex-shrink: 0;
-    width: 40%;
-    
+    padding: 0 16px;
+
     input {
-      padding: 8px;
       width: 100%;
-      font-size: 12px;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
       border-radius: 5px;
-      border: 1px solid #191919;
-      text-align: center;
+      font-size: 14px;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
     }
   }
 
   &-auth {
     display: flex;
     align-items: center;
+    gap: 16px;
 
     a {
-      font-size: 22px;
-      margin-left: 12px;
-      font-weight: bold;
       color: #007bff;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease, transform 0.2s ease;
+
+      &:hover {
+        color: #0056b3;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
     }
 
     button {
-      font-size: 18px;
-      padding: 12px 24px;
+      padding: 8px 16px;
       background-color: #007bff;
-      color: white;
-      border-radius: 5px;
+      color: #fff;
+      font-size: 16px;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
 
       &:hover {
         background-color: #0056b3;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        background-color: #003d7a;
+        transform: scale(0.95);
       }
     }
   }
 
   &-theme {
     position: relative;
-    margin-left: 10px;
-    margin-right: 10px;
 
     button {
-      min-width: 30px;
-      max-width: 50px;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 26px;
-      font-weight: bold;
+      font-size: 24px;
       color: #007bff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
+      transition: color 0.3s ease, transform 0.2s ease;
 
-      img{
-        min-width: 30px;
-        max-width: 60px;
-
+      &:hover {
+        color: #0056b3;
+        transform: rotate(15deg);
       }
 
+      &:active {
+        transform: rotate(-15deg) scale(0.9);
+      }
     }
 
     .theme-dropdown {
@@ -149,35 +174,100 @@
       top: 100%;
       right: 0;
       background-color: #fff;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      border: 1px solid #191919;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
       border-radius: 5px;
-      padding: 8px;
-      min-width: 12vh;
-      max-width: 400px;
-      z-index: 2000;
-      margin-top: 1.2vh;
-
-      .theme-option {
-        padding: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        min-width: 12vh;
-        border: none;
-        background: none;
-        text-align: left;
-        width: 100%;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: #ddd;
-        }
-
-        &.active {
-          font-weight: bold;
-          color: #007bff;
+      padding: 8px 0;
+      z-index: 1000;
+    
+      li {
+        list-style: none; /* Elimina el punto de la lista */
+        padding: 10px 20px;
+    
+        .theme-option {
+          background: none;
+          border: none;
+          color: #333;
+          font-size: 16px;
+          text-align: left;
+          cursor: pointer;
+          width: 100%;
+          border-radius: 10%;
+          transition: background-color 0.3s ease, color 0.3s ease;
+    
+          &:hover {
+            background-color: #f0f0f0;
+            color: #007bff;
+            border-radius: 10%;
+            animation: wobble 0.6s ease-in infinite; 
+          }
+    
+          &.active {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+          }
         }
       }
+    }
+    
+    /* Definición de la animación de tambaleo */
+    @keyframes wobble {
+      0% {
+        transform: rotate(0deg);
+      }
+      15% {
+        transform: rotate(-4deg);
+      }
+      30% {
+        transform: rotate(4deg);
+      }
+      45% {
+        transform: rotate(-3deg);
+      }
+      60% {
+        transform: rotate(2deg);
+      }
+      75% {
+        transform: rotate(-1deg);
+      }
+      100% {
+        transform: rotate(1deg);
+      }
+    }
+    
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+
+    &-menu {
+      width: 100%;
+
+      &-trigger {
+        font-size: 20px;
+      }
+
+      &-dropdown {
+        width: 100%;
+      }
+    }
+
+    &-search {
+      width: 100%;
+    }
+
+    &-auth {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &-theme {
+      width: 100%;
+      justify-content: center;
     }
   }
 }
