@@ -1,10 +1,40 @@
+@use "./core/_Reset.scss" as *;
+@use "./core/_Variables.scss" as *;
+@use "./core/_Functions.scss" as *;
+@use "./layout/_PublicLayout.scss" as *;
+@use "./pages/_Error.scss" as *;
+@use "./pages/_Home.scss" as *;
+@use "./pages/_Login.scss" as *;
+@use "./themes/theme.scss" as *;
+@use "./components/_ApiPagination.scss" as *;
+@use "./components/_CharacterSearch.scss" as *;
+@use "./components/_ContactForm.scss" as *;
+@use "./components/_EnemiesSearch.scss" as *;
+@use "./components/_Favourite.scss" as *;
+@use "./components/_footer.scss" as *;
+@use "./components/_LoginForm.scss" as *;
+@use "./components/_NavBar.scss" as *;
+@use "./components/_PrivateNavBar.scss" as *;
+@use "./components/_RegisterForm.scss" as *;
+@use "./components/_UserProfile.scss" as *;
+
+
+
+
+
 html, body {
     height: 99%; 
     margin: 0; 
     padding: 0; 
-    font-family: 'Black Archive', 'Comfortaa'; 
+    font-family: "Archivo Black", serif;
   }
   
+  p{
+
+    font-family: "Comfortaa", sans-serif;
+
+
+  }
   
   
   #root {

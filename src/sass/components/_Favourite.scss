@@ -1,3 +1,11 @@
+@use "sass:math";
+@use "sass:color";
+@use "../core/_Variables" as *;
+
+// Definir colores adicionales si es necesario
+$success-color: #28a745;
+$danger-color: #dc3545;
+
 .api-pagination {
   text-align: center;
   width: 80%;
@@ -6,52 +14,68 @@
   margin: 0 auto;
 
   .favorites-list {
-    margin-top: 20px;
+    margin-top: $padding-base;
     text-align: center;
 
     h2 {
-      font-size: 16px;
+      font-size: $font-size-base;
       font-weight: bold;
-      color: #333;
+      color: $text-color;
     }
 
     .favorite-card {
       display: inline-block;
-      margin: 8px;
-      width: 140px; // Establece un tamaño fijo
+      margin: $padding-base;
+      width: 140px;
       text-align: center;
-      background-color: #f9f9f9;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 8px;
+      background-color: $secondary-color;
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      padding: $padding-base;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
 
       .favorite-image {
         object-fit: cover;
-        width: 100px; // Establece un tamaño fijo para las imágenes
+        width: 100px;
         height: 100px;
-        border-radius: 8px;
+        border-radius: $border-radius;
+        transition: transform 0.4s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
       }
 
       p {
-        font-size: 12px;
-        color: #191919;
+        font-size: $font-size-small;
+        color: $text-dark;
       }
     }
   }
 
   .edit-favorites-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin-top: $padding-base;
+    padding: $padding-small $padding-large;
+    font-size: $font-size-base;
     border: none;
-    border-radius: 8px;
-    background-color: #007bff;
+    border-radius: $border-radius;
+    background-color: $primary-color;
     color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s ease;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: lighten($primary-color, 10%);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 
@@ -68,10 +92,11 @@
 
     .modal-content {
       background-color: white;
-      padding: 20px;
-      border-radius: 8px;
+      padding: $padding-large;
+      border-radius: $border-radius;
       max-width: 1000px;
       width: 100%;
+      animation: modalFadeIn 0.4s ease;
     }
 
     .item-list {
@@ -80,40 +105,51 @@
       justify-content: center;
 
       .card {
-        margin: 8px;
-        width: 140px; // Fijo para todas las cards
+        margin: $padding-base;
+        width: 140px;
         text-align: center;
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 8px;
+        background-color: $secondary-color;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        padding: $padding-base;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
 
         .card-image {
           object-fit: cover;
-          width: 100px; // Ajusta el tamaño de las imágenes
+          width: 100px;
           height: 100px;
-          border-radius: 8px;
+          border-radius: $border-radius;
+          transition: transform 0.4s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
         }
 
         .card-title {
-          font-size: 12px;
+          font-size: $font-size-small;
           font-weight: bold;
-          color: #191919;
+          color: $text-color-dark;
         }
 
         .add-to-fav-btn {
-          margin-top: 8px;
-          padding: 6px 12px;
-          font-size: 12px;
+          margin-top: $padding-small;
+          padding: $padding-extra-small $padding-base;
+          font-size: $font-size-small;
           border: none;
-          border-radius: 8px;
-          background-color: #28a745;
+          border-radius: $border-radius;
+          background-color: $success-color;
           color: #fff;
           cursor: pointer;
           transition: background-color 0.3s;
 
           &:hover {
-            background-color: #218838;
+            background-color: darken($success-color, 10%);
           }
         }
       }
@@ -122,16 +158,17 @@
     .pagination {
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
+      margin-top: $padding-large;
 
       button {
-        padding: 10px;
-        font-size: 14px;
-        background-color: #007bff;
+        padding: $padding-small;
+        font-size: $font-size-small;
+        background-color: $primary-color;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: $border-radius;
         cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s ease;
 
         &:disabled {
           background-color: #ccc;
@@ -139,28 +176,104 @@
         }
 
         &:hover {
-          background-color: #0056b3;
+          background-color: lighten($primary-color, 10%);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(1px);
         }
       }
 
       span {
-        font-size: 14px;
+        font-size: $font-size-small;
         align-self: center;
       }
     }
 
     .close-modal-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin-top: $padding-large;
+      padding: $padding-small $padding-large;
+      font-size: $font-size-base;
       border: none;
-      border-radius: 8px;
-      background-color: #dc3545;
+      border-radius: $border-radius;
+      background-color: $danger-color;
       color: #fff;
       cursor: pointer;
 
       &:hover {
-        background-color: #c82333;
+        background-color: darken($danger-color, 10%);
+      }
+    }
+  }
+}
+
+// Animación para la entrada del modal
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .api-pagination {
+    .favorites-list {
+      .favorite-card {
+        width: 120px;
+        padding: $padding-small;
+      }
+    }
+
+    .modal {
+      .item-list {
+        .card {
+          width: 120px;
+          padding: $padding-extra-small;
+        }
+      }
+
+      .pagination {
+        button {
+          padding: $padding-extra-small;
+          font-size: $font-size-base;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .api-pagination {
+    .favorites-list {
+      .favorite-card {
+        width: 100%;
+        padding: $padding-base;
+        margin: $padding-small 0;
+      }
+    }
+
+    .modal {
+      .item-list {
+        flex-direction: column;
+        align-items: center;
+
+        .card {
+          width: 100%;
+          padding: $padding-base;
+          margin: $padding-small 0;
+        }
+      }
+
+      .pagination {
+        button {
+          padding: $padding-base $padding-extra-small;
+          font-size: $font-size-base;
+        }
       }
     }
   }

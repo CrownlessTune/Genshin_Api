@@ -79,7 +79,6 @@ const ApiPagination = () => {
   return (
     <main className="api-pagination">
       <header>
-        <h1>Bosses, Artifacts & Characters</h1>
       </header>
       <section className="item-list">
         {currentItems.map((item) => (

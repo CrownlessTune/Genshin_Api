@@ -11,27 +11,55 @@
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Permite que los filtros se adapten a varias líneas */
     gap: 15px;
+    padding: 10px;
+    background: #f4f4f4; /* Fondo para resaltar el área de filtros */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
     label {
+      display: flex;
+      align-items: center;
       font-size: 1rem;
+      color: #333;
 
       select {
-        margin-left: 5px;
-        padding: 5px;
+        margin-left: 10px;
+        padding: 8px 12px;
+        font-size: 1rem;
+        color: #333;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:hover {
+          border-color: #bbb;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+        }
       }
     }
   }
 
   .enemies-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas por defecto */
     gap: 20px; /* Espacio entre las tarjetas */
     margin-top: 20px;
     max-height: 400px;
     overflow-y: auto;
 
     .enemy-card {
+      color: #191919;
       background: #f9f9f9;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -49,10 +77,9 @@
       }
 
       .enemy-image {
-        
         object-fit: cover;
-        width: 50%;
-        height: 200px; /* Fijar altura para que las imágenes sean consistentes */
+        width: 50%; /* Ajuste proporcional */
+        height: 200px; /* Fijar altura para consistencia */
         border-radius: 8px;
         margin-bottom: 10px;
       }
@@ -61,6 +88,76 @@
         color: #191919;
         font-size: 1rem;
         margin: 5px 0;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.5rem; /* Reduce el tamaño del título */
+    }
+
+    .filters {
+      flex-direction: column; /* Apila los filtros verticalmente */
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+    }
+
+    .filters label {
+      width: 100%; /* Hace que los filtros ocupen el ancho completo */
+      justify-content: center;
+
+      select {
+        width: 80%; /* Ancho consistente en pantallas medianas */
+      }
+    }
+
+    .enemies-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 columnas en pantallas medianas */
+      gap: 15px; /* Reduce el espacio entre las tarjetas */
+    }
+
+    .enemy-card {
+      padding: 10px; /* Reduce el relleno para tarjetas más compactas */
+
+      h3 {
+        font-size: 1rem; /* Reduce el tamaño del texto */
+      }
+
+      .enemy-image {
+        width: 80%; /* Ocupa más espacio horizontal en pantallas pequeñas */
+        height: 150px; /* Reduce la altura para mantener proporciones */
+      }
+
+      p {
+        font-size: 0.9rem; /* Ajuste menor para texto descriptivo */
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .filters {
+      padding: 10px;
+      gap: 8px;
+
+      label {
+        select {
+          width: 100%; /* Ocupa el ancho completo */
+        }
+      }
+    }
+
+    .enemies-grid {
+      grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+    }
+
+    .enemy-card {
+      padding: 8px; /* Ajusta aún más el espacio interno */
+
+      .enemy-image {
+        width: 100%; /* Ocupa todo el ancho de la tarjeta */
+        height: 120px; /* Ajusta la altura para pantallas muy pequeñas */
       }
     }
   }

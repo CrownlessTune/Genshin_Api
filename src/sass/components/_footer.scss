@@ -1,3 +1,6 @@
+@use "../core/_Variables.scss" as *;
+
+
 footer {
   margin-top: 10px;
   padding: 20px;
@@ -7,7 +10,7 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  border-top: 2px solid #191919;
+  border-top: 2px solid;
   text-align: center;
   box-sizing: border-box;
   animation: footerAppear 1.5s ease;
@@ -27,7 +30,6 @@ footer {
   a {
     font-size: 20px;
     text-decoration: none;
-    color: #191919;
     transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
 
     &:hover {

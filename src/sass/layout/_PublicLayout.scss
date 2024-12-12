@@ -4,32 +4,33 @@
 .public-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  box-sizing: border-box;
-  width: 100%;
-  overflow-x: hidden;
+  min-height: 100vh; // Ocupa toda la altura del viewport
+  width: 100%; // Ocupa todo el ancho
+  overflow-x: hidden; // Previene el desplazamiento horizontal no deseado
+  box-sizing: border-box; // Incluye padding y border en el cálculo del ancho y alto
 
   .navbar,
   .footer {
-    height: variables.$nav-footer-height; // Uso de variables correctamente
+    height: variables.$nav-footer-height; // Altura definida en las variables
+    width: 100%; // Asegura que ocupen todo el ancho del layout
   }
 
   main {
-    flex: 1;
-    padding: variables.$layout-padding;
-    text-align: center;
-    overflow-y: auto;
-    width: 100%; // Asegura que el contenido ocupe todo el ancho disponible
-    max-width: 100%; // Asegura que el contenido no exceda el ancho de la pantalla
-    height: calc(100vh - variables.$nav-footer-height); // Ajusta la altura del main para que no sea más grande que la pantalla
+    flex: 1; // Permite que el contenido crezca para llenar el espacio restante
+    padding: variables.$layout-padding; // Espaciado adaptable según variables
+    width: 100%; // Evita contenido fuera del layout
+    max-width: 100%; // Previene el desbordamiento
+    height: calc(100vh - variables.$nav-footer-height * 2); // Ajusta para excluir navbar y footer
+    text-align: center; // Centra el contenido en dispositivos más pequeños
+    overflow-y: auto; // Permite scroll vertical si el contenido es mayor
   }
 }
 
-// Media Queries
+// Media Queries para diseño adaptable
 @media (max-width: 1024px) {
   .public-layout {
     main {
-      padding: math.div(variables.$layout-padding, 1.5);
+      padding: math.div(variables.$layout-padding, 1.5); // Reduce el padding en tablets
     }
   }
 }
@@ -37,7 +38,7 @@
 @media (max-width: 768px) {
   .public-layout {
     main {
-      padding: math.div(variables.$layout-padding, 2);
+      padding: math.div(variables.$layout-padding, 2); // Reduce aún más el padding en móviles grandes
     }
   }
 }
@@ -45,7 +46,7 @@
 @media (max-width: 480px) {
   .public-layout {
     main {
-      padding: math.div(variables.$layout-padding, 3);
+      padding: math.div(variables.$layout-padding, 3); // Reduce al mínimo el padding en móviles pequeños
     }
   }
 }
